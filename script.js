@@ -172,10 +172,5 @@ const updateShopInfo = async (id, valueShop, valueCost) => {
     } else {
         alert("Введите корректное значение!")
     }
-
-    if (resp.status === 200) {
-        getAllShops();
-    } else {
-        alert('Ошибкаааа:' + resp.status);
-    }
+    getAllShops();
 }
