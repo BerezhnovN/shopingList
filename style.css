@@ -1,0 +1,171 @@
+body {
+  background-color: #e2f3ff;
+  box-sizing: border-box;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+}
+
+h1 {
+  font-weight: 500;
+  font-style: italic;
+}
+.edit-inputs {
+  margin-left: 15vw;
+}
+
+.edit-inputs input {
+  margin-right: 4vw;
+  width: 26vw;
+}
+
+p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+span {
+  margin-top: 16px;
+  margin-right: 1vw;
+}
+
+.cost-container {
+  box-sizing: border-box;
+  justify-content: left;
+  display: flex;
+}
+
+.img-container {
+  width: 20vw;
+}
+
+img {
+  width: 32px;
+  height: 32px;
+  vertical-align: bottom;
+}
+
+.list {
+  display: flex;
+  justify-content: start;
+  margin-left: 20vw;
+  width: 35vw;
+}
+
+.data-cost {
+  display: flex;
+  justify-content: space-around;
+  width: 15vw;
+}
+
+.data-cost-image {
+  display: flex;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input {
+  border-radius: 5px;
+  width: 30vw;
+  height: 5vh;
+  border: 1px solid #bfbfbf;
+}
+
+.input-where,
+.input-how {
+  margin: 2%;
+}
+
+.price {
+  width: 17vw;
+  height: 5vh;
+}
+
+h5 {
+  margin: 0;
+  text-align: left;
+  font-weight: lighter;
+  margin-bottom: 1%;
+}
+
+button {
+  height: 37px;
+  width: 10vw;
+  margin-top: 2.5vh;
+  border-radius: 5px;
+  background-color: #79caab;
+  min-width: 110px;
+  border-style: none;
+}
+
+#final-cost {
+  text-align: right;
+  padding-right: 30vw;
+}
+
+@media (max-width: 768px) {
+  #add-shop,
+  #add-costs{
+    width: 33vw;
+  }
+  .list{
+    margin-left: 15vw;
+  }
+  .data-cost{
+    width: 25vw;
+  }
+}
+
+@media (max-device-width: 425px) {
+  h1{
+    text-align: left;
+    margin-left: 10vw;
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #add-shop,
+  #add-costs {
+    width: 80vw;
+  }
+
+  button {
+    margin-left: 42vw;
+    width: 40vw;
+    height: 4vh;
+  }
+
+  #final-cost {
+    padding-right: 10vw;
+  }
+
+  .cost-container {
+    width: 95vw;
+  }
+
+  .list {
+    margin-left: 10vw;
+    padding-right: 25vw;
+  }
+
+  .list p {
+    padding-top: 8vw;
+  }
+
+  .data-cost-image {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .data-cost {
+    display: flex;
+    flex-direction: column;
+  }
+}
