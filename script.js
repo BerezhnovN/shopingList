@@ -117,7 +117,11 @@ const deleteShop = async (itemId) => {
         method: 'DELETE'
     });
 
-    getAllShops();
+    if (resp.status === 200) {
+        getAllShops();
+    } else {
+        alert('Ошибкаааа:' + resp.status);
+    }
 }
 
 const updateText = (event) => {
@@ -168,6 +172,10 @@ const updateShopInfo = async (id, valueShop, valueCost) => {
     } else {
         alert("Введите корректное значение!")
     }
-    
-    getAllShops()
+
+    if (resp.status === 200) {
+        getAllShops();
+    } else {
+        alert('Ошибкаааа:' + resp.status);
+    }
 }
