@@ -1,11 +1,11 @@
-let allShops = []; //все магазины
-let valueShop = ''; // название магазина
-let valuePrice = ''; // потрачено в магазине
+let allShops = [];
+let valueShop = '';
+let valuePrice = '';
 const link = 'http://localhost:8000';
-let inputShop = null; // поле ввода названия магазина
-let inputPrice = null; // поле ввода потраченной суммы
-let DateNow = new Date().toLocaleDateString();
-let CurrentDate = DateNow.split('/').join('.')
+let inputShop = null;
+let inputPrice = null;
+let dateNow = new Date().toLocaleDateString();
+let currentDate = dateNow.split('/').join('.')
 
 const getAllShops = async () => {
     const resp = await fetch(`${link}/allShops`, {
@@ -14,6 +14,15 @@ const getAllShops = async () => {
     const result = await resp.json();
     allShops = result.data;
     render();
+}
+
+let spending = 0;
+
+const total = () => {
+    let sumCost = allShops.reduce(function (sum, currentSum) {
+        return sum + currentSum.cost;
+    }, spending);
+    return sumCost
 }
 
 window.onload = async function init() {
@@ -34,46 +43,45 @@ onClickAddBtn = async () => {
             },
             body: JSON.stringify({
                 text: valueShop,
-                data: CurrentDate,
+                data: currentDate,
                 cost: valuePrice
             })
         });
 
-        inputShop.value = '';
-        inputPrice.value = '';
-        valueShop = '';
-        valuePrice = '';
-
-        getAllShops();
+        const result = await resp.json()
+            .then((resp) => {
+                allShops.push(resp)
+                inputShop.value = '';
+                inputPrice.value = '';
+                valueShop = '';
+                valuePrice = ''
+                render()
+            })
     } else {
         alert('Введите хоть какое-то значение');
     }
 }
 
 const render = () => {
-    let spending = 0;
-    let sumCost = allShops.reduce(function (sum, currentSum) {
-        return sum + currentSum.cost;
-    }, spending);
-
+    
     const content = document.getElementById("shop-list");
     while (content.firstChild) {
         content.removeChild(content.firstChild);
     }
 
-    allShops.map((item, itemId) => {
+    allShops.map((item, index) => {
         const container = document.createElement('div');
-        container.id = `cost${itemId}`;
+        container.id = `cost${index}`;
         container.className = 'cost-container';
         const list = document.createElement('div');
         list.className = 'list';
         const listItem = document.createElement('p');
-        listItem.innerText = itemId + 1 + ") " + "Магазин " + "\"" + item.text + '\"';
-        const dCIContainer = document.createElement('div')
-        dCIContainer.className = "data-cost-image";
+        listItem.innerText = index + 1 + ") " + "Магазин " + "\"" + item.text + '\"';
+        const dataCostImgContainer = document.createElement('div')
+        dataCostImgContainer.className = "data-cost-image";
         const dataCostContainer = document.createElement('div');
         const updateData = document.createElement('span');
-        updateData.innerHTML = CurrentDate;
+        updateData.innerHTML = currentDate;
         dataCostContainer.append(updateData);
         const price = document.createElement('p');
         price.innerText = `${item.cost} p. `;
@@ -85,26 +93,24 @@ const render = () => {
         imageEdit.src = 'images/edit.png';
         imageEdit.onclick = () => {
             list.remove();
-            dCIContainer.remove();
+            dataCostImgContainer.remove();
             editShop(item, item._id, container)
         }
 
         const imageDelete = document.createElement('img');
         imageDelete.src = 'images/delete.png';
-        imageDelete.onclick = () => {
-            deleteShop(item._id);
-        }
+        imageDelete.onclick = () => deleteShop(item._id);
 
-        document.getElementById('final-cost').innerText = `Итого:${sumCost} р.`;
         list.append(listItem);
         imgContainer.append(imageEdit);
         imgContainer.append(imageDelete);
-        dCIContainer.append(dataCostContainer);
-        dCIContainer.append(imgContainer);
+        dataCostImgContainer.append(dataCostContainer);
+        dataCostImgContainer.append(imgContainer);
         container.append(list);
-        container.append(dCIContainer);
+        container.append(dataCostImgContainer);
         content.append(container);
     });
+    document.getElementById('final-cost').innerText = `Итого:${total(allShops)} р.`;
 }
 
 const deleteShop = async (itemId) => {
@@ -118,10 +124,16 @@ const deleteShop = async (itemId) => {
     });
 
     if (resp.status === 200) {
-        getAllShops();
-    } else {
-        alert('Ошибкаааа:' + resp.status);
-    }
+        allShops.forEach((item, index) => {
+          if (item._id === itemId) {
+            allShops.splice(index, 1)
+          }
+          return allShops;
+        })
+        render()
+      } else {
+        alert('Всё очень плохо :(' + resp.status)
+      }
 }
 
 const updateText = (event) => {
@@ -169,8 +181,21 @@ const updateShopInfo = async (id, valueShop, valueCost) => {
                 cost: valueCost
             })
         })
+        if (resp.status === 200) {
+
+            allShops = allShops.map((item) => {
+              const newShop = {...item};
+              if (item._id === id) {
+                newShop.text = valueShop;
+                newShop.cost = valueCost;
+              }
+              return newShop;
+            })
+            getAllShops()
+          } else {
+            alert('Всё очень плохо :(' + resp.status)
+          }
     } else {
         alert("Введите корректное значение!")
     }
-    getAllShops();
 }
